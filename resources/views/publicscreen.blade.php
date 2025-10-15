@@ -27,7 +27,7 @@
         <div class="grid grid-cols-2 gap-4">
             <!-- Donut Chart -->
             <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col justify-center items-center">
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Today's Attendance Overview</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Kehadiran hari ini</h3>
                 <div class="relative w-full" style="max-width: 400px; height: 300px;">
                     <canvas id="attendanceChart"></canvas>
                 </div>
@@ -35,7 +35,7 @@
 
             <!-- Bar Chart -->
             <div class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col justify-center items-center">
-                <h3 class="text-lg font-bold text-slate-800 mb-2">Attendance by Class</h3>
+                <h3 class="text-lg font-bold text-slate-800 mb-2">Kehadiran per Kelas</h3>
                 <div class="relative w-full" style="max-width: 500px; height: 300px;">
                     <canvas id="classChart"></canvas>
                 </div>

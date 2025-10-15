@@ -18,7 +18,7 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        $attendances = Attendance::with('student')
+        $attendances = Attendance::with('user')
             ->where('user_id', Auth::id()) // hanya data siswa login
             ->orderBy('date', 'desc')
             ->get();
@@ -168,35 +168,37 @@ public function publicscreen()
     ];
 
     // Chart per kelas
-    $classes = User::where('role', 'student')->select('class_id')->distinct()->pluck('class_id');
+    $classes = Classroom::select('id', 'name')
+    ->whereIn('id', User::where('role', 'student')->pluck('class_id'))
+    ->get();
     $classData = [];
 
     foreach ($classes as $class) {
-        $studentsInClass = User::where('class_id', $class)->count();
-
+        $studentsInClass = User::where('class_id', $class->id)->count();
+    
         $present = Attendance::whereDate('date', $today)
             ->where('status', 'Hadir')
-            ->whereHas('user', fn($q) => $q->where('class_id', $class))
+            ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
             ->count();
-
+    
         $telat = Attendance::whereDate('date', $today)
             ->where('status', 'Telat')
-            ->whereHas('user', fn($q) => $q->where('class_id', $class))
+            ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
             ->count();
-
+    
         $izin = Attendance::whereDate('date', $today)
             ->where('status', 'Izin')
-            ->whereHas('user', fn($q) => $q->where('class_id', $class))
+            ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
             ->count();
-
+    
         $sakit = Attendance::whereDate('date', $today)
             ->where('status', 'Sakit')
-            ->whereHas('user', fn($q) => $q->where('class_id', $class))
+            ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
             ->count();
-
+    
         $alpha = $studentsInClass - ($present + $telat + $izin + $sakit);
-
-        $classData[$class] = [
+    
+        $classData[$class->name] = [
             'Hadir' => $present,
             'Telat' => $telat,
             'Izin'  => $izin,
@@ -204,7 +206,7 @@ public function publicscreen()
             'Alpha' => max($alpha, 0),
         ];
     }
-
+    
     return view('publicscreen', compact(
         'totalStudents',
         'attendanceStats',

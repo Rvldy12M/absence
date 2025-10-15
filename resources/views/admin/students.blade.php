@@ -1,14 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Student List')
+@section('title', 'List Siswa')
 
 @section('content')
 <div class="p-6">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-slate-800">Student List</h1>
+        <h1 class="text-3xl font-bold text-slate-800">List siswa</h1>
         <a href="{{ route('admin.students.create') }}" 
            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-900 to-slate-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-           + Add Student
+           + Tambah Siswa
         </a>
     </div>
 
@@ -17,10 +17,10 @@
             <thead class="bg-slate-50">
                 <tr>
                     <th>ID</th>
-                    <th>Name</th>
-                    <th>Class</th>
+                    <th>Nama</th>
+                    <th>Kelas</th>
                     <th>Email</th>
-                    <th>Actions</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
         </table>

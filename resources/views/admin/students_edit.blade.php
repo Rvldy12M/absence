@@ -1,22 +1,9 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Student')
+@section('title', 'Edit Siswa')
 
 @section('content')
 <div class="p-6">
-    <!-- Header with Back Button -->
-    <div class="mb-8 flex items-center justify-between">
-        <div>
-            <a href="{{ route('admin.students') }}" class="inline-flex items-center text-blue-600 hover:text-blue-700 mb-3 transition-colors">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                </svg>
-                <span class="font-medium">Back to Students</span>
-            </a>
-            <h1 class="text-3xl font-bold text-slate-800">Edit Student Information</h1>
-            <p class="text-slate-600 mt-1">Update the student's details below</p>
-        </div>
-    </div>
 
     <!-- Form Card -->
     <div class="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
@@ -30,8 +17,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-white">Edit Student</h2>
-                    <p class="text-blue-200 text-sm">Modify student information</p>
+                    <h2 class="text-lg font-bold text-white">Edit Siswa</h2>
+                    <p class="text-blue-200 text-sm">Perbarui data siswa</p>
                 </div>
             </div>
         </div>
@@ -52,7 +39,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                                 </svg>
                             </div>
-                            <span>Full Name</span>
+                            <span>Nama Panjang</span>
                         </div>
                     </label>
                     <div class="relative">
@@ -94,7 +81,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                 </svg>
                             </div>
-                            <span>Email Address</span>
+                            <span>Alamat Email</span>
                         </div>
                     </label>
                     <div class="relative">
@@ -112,21 +99,6 @@
                                 {{ $message }}
                             </span>
                         @enderror
-                    </div>
-                </div>
-
-                <!-- Info Box -->
-                <div class="mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                    <div class="flex space-x-3">
-                        <div class="flex-shrink-0">
-                            <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-sm font-semibold text-blue-900">Note</h3>
-                            <p class="text-sm text-blue-700 mt-1">Make sure the email is unique and valid. The student will use this email to access their account.</p>
-                        </div>
                     </div>
                 </div>
             </form>
@@ -152,18 +124,6 @@
             </button>
         </div>
     </div>
-
-    <!-- Helper Text -->
-    <div class="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200 flex items-start space-x-3">
-        <svg class="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-        </svg>
-        <div>
-            <p class="text-sm font-semibold text-yellow-900">Required Fields</p>
-            <p class="text-sm text-yellow-800">All fields marked are required to update student information.</p>
-        </div>
-    </div>
-
 </div>
 
 @endsection

@@ -10,6 +10,11 @@ use Carbon\Carbon;
 use Ozdemir\Datatables\Datatables;
 use Ozdemir\Datatables\DB\LaravelAdapter;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Contracts\View\View;
+use Maatwebsite\Excel\Concerns\FromView;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use App\Exports\AttendancesExport;
 
 
 
@@ -40,35 +45,37 @@ class AdminController extends Controller
         ];
 
         // Chart per kelas
-        $classes = User::where('role', 'student')->select('class_id')->distinct()->pluck('class_id');
+        $classes = Classroom::select('id', 'name')
+        ->whereIn('id', User::where('role', 'student')->pluck('class_id'))
+        ->get();
         $classData = [];
 
         foreach ($classes as $class) {
-            $studentsInClass = User::where('class_id', $class)->count();
-
+            $studentsInClass = User::where('class_id', $class->id)->count();
+        
             $present = Attendance::whereDate('date', $today)
                 ->where('status', 'Hadir')
-                ->whereHas('user', fn($q) => $q->where('class_id', $class))
+                ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
                 ->count();
-
+        
             $telat = Attendance::whereDate('date', $today)
                 ->where('status', 'Telat')
-                ->whereHas('user', fn($q) => $q->where('class_id', $class))
+                ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
                 ->count();
-
+        
             $izin = Attendance::whereDate('date', $today)
                 ->where('status', 'Izin')
-                ->whereHas('user', fn($q) => $q->where('class_id', $class))
+                ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
                 ->count();
-
+        
             $sakit = Attendance::whereDate('date', $today)
                 ->where('status', 'Sakit')
-                ->whereHas('user', fn($q) => $q->where('class_id', $class))
+                ->whereHas('user', fn($q) => $q->where('class_id', $class->id))
                 ->count();
-
+        
             $alpha = $studentsInClass - ($present + $telat + $izin + $sakit);
-
-            $classData[$class] = [
+        
+            $classData[$class->name] = [
                 'Hadir' => $present,
                 'Telat' => $telat,
                 'Izin'  => $izin,
@@ -76,7 +83,7 @@ class AdminController extends Controller
                 'Alpha' => max($alpha, 0),
             ];
         }
-
+    
         return view('admin.dashboard', compact(
             'totalStudents',
             'attendanceStats',
@@ -279,7 +286,9 @@ class AdminController extends Controller
             'attendances.time',
             'attendances.status',
             'attendances.method',
-            'attendances.photo'
+            'attendances.photo',
+            'attendances.notes',
+            
         ])
         ->join('users', 'users.id', '=', 'attendances.user_id')
         ->leftJoin('classrooms', 'users.class_id', '=', 'classrooms.id');
@@ -302,11 +311,24 @@ class AdminController extends Controller
         // 🔹 Urutkan berdasarkan tanggal & jam terbaru
         $query->orderByDesc('attendances.date')
               ->orderByDesc('attendances.time');
+              
     
         $dt = new Datatables(new LaravelAdapter);
         $dt->query($query);
-    
+
         return $dt->generate();
+    }
+
+    public function exportAttendances(Request $request)
+    {
+        $date = $request->get('date');
+        $status = $request->get('status');
+        $class_id = $request->get('class_id');
+
+        return Excel::download(
+            new AttendancesExport($date, $status, $class_id),
+            'attendance_records.xlsx'
+        );
     }
 
     // 🔹 Create Attendance (Manual Input / Sakit / Izin / Hadir)
@@ -363,7 +385,8 @@ class AdminController extends Controller
                 'attendances.time',
                 'attendances.status',
                 'attendances.method',
-                'attendances.photo'
+                'attendances.photo',
+                'attendances.notes',
             ])
                 ->join('users', 'users.id', '=', 'attendances.user_id')
                 ->when($classId, function ($q) use ($classId) {

@@ -64,6 +64,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/admin/students/{id}/edit', [AdminController::class, 'editStudent'])->name('admin.students.edit');
     Route::post('/admin/students/{id}/update', [AdminController::class, 'updateStudent'])->name('admin.students.update');
     Route::delete('/admin/students/{id}', [AdminController::class, 'deleteStudent'])->name('admin.students.delete');
+
+    //excel
+    Route::get('/admin/attendances/export', [App\Http\Controllers\AdminController::class, 'exportAttendances'])
+    ->name('admin.attendances.export');
+
 });
 
 

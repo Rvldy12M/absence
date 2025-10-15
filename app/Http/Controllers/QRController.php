@@ -33,12 +33,12 @@ class QRController extends Controller
         } elseif ($request->filled('qr_code')) {
             // Mode QR
             if (!$this->isQrValidForToday($request->qr_code)) {
-                return back()->with('error', 'QR tidak valid untuk hari ini');
+                return back()->with('error', ' Silahkan Ambil Foto terlebih dahulu');
             }
             $photoPath = null;
             $method = 'qr';
         } else {
-            return back()->with('error', 'Harap scan QR atau ambil foto terlebih dahulu.');
+            return back()->with('error', 'Harap Ambil Foto terlebih dahulu.');
         }
 
         // 🔹 Data user & tanggal

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Attendance System</title>
+    <title>Absenly</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 min-h-screen">
@@ -20,8 +20,8 @@
                         </svg>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold text-white">School Attendance</h1>
-                        <p class="text-xs text-blue-200">Smart Presence System</p>
+                        <h1 class="text-2xl font-bold text-white">Absenly</h1>
+                        <p class="text-xs text-blue-200">Sistem Kehadiran Cerdas</p>
                     </div>
                 </div>
 
@@ -47,7 +47,7 @@
                             </a>
                                 <a href="{{ route('publicscreen') }}" 
                                    class="px-5 py-2.5 rounded-lg bg-white text-blue-900 font-semibold transition-all duration-200 hover:bg-blue-50 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                    Information
+                                    Kehadiran Hari ini
                                 </a>
                         @endauth
                     @endif
@@ -63,7 +63,7 @@
             <!-- Left Content -->
             <div class="text-white space-y-8">
                 <div class="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4">
-                    <span class="text-sm font-medium text-blue-200">🎓 Modern School Solution</span>
+                    <span class="text-sm font-medium text-blue-200">🎓 Solusi Sekolah Modern</span>
                 </div>
                 
                 <h1 class="text-5xl lg:text-6xl font-bold leading-tight">
@@ -74,7 +74,7 @@
                 </h1>
                 
                 <p class="text-xl text-blue-100 leading-relaxed">
-                    Effortlessly track student attendance with QR code technology. Fast, accurate, and paperless solution for modern schools.
+                Pantau kehadiran siswa dengan mudah. Solusi cepat, akurat, dan tanpa kertas untuk sekolah modern.
                 </p>
 
                 <!-- Features List -->
@@ -86,8 +86,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-white">QR Code Scanner</h3>
-                            <p class="text-sm text-blue-200">Quick check-in with QR</p>
+                            <h3 class="font-semibold text-white">Kamera</h3>
+                            <p class="text-sm text-blue-200">Check in cepat dengan kamera</p>
                         </div>
                     </div>
 
@@ -98,8 +98,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-white">Real-time Reports</h3>
-                            <p class="text-sm text-blue-200">Instant attendance data</p>
+                            <h3 class="font-semibold text-white">Laporan real-time</h3>
+                            <p class="text-sm text-blue-200">Data kehadiran instan</p>
                         </div>
                     </div>
 
@@ -110,8 +110,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-white">Secure System</h3>
-                            <p class="text-sm text-blue-200">Protected student data</p>
+                            <h3 class="font-semibold text-white">Sistem yang aman</h3>
+                            <p class="text-sm text-blue-200">Data siswa terlindungi</p>
                         </div>
                     </div>
 
@@ -122,8 +122,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="font-semibold text-white">Time Efficient</h3>
-                            <p class="text-sm text-blue-200">Save time, go digital</p>
+                            <h3 class="font-semibold text-white">Effisiensi waktu</h3>
+                            <p class="text-sm text-blue-200">Hemat waktu dengan digital</p>
                         </div>
                     </div>
                 </div>
@@ -144,9 +144,9 @@
                                 </a>
                             @endif
                         @else
-                            <a href="{{ route('dashboard') }}" 
+                            <a href="{{ route('publicscreen') }}" 
                                class="px-8 py-4 bg-white text-blue-900 font-bold rounded-lg shadow-2xl hover:shadow-xl transform hover:-translate-y-1 transition-all duration-200">
-                                Information
+                                Kehadiran hari ni
                             </a>
                             <a href="{{ route('login') }}" 
                                class="px-8 py-4 bg-white/10 backdrop-blur-md text-white font-bold rounded-lg border-2 border-white/30 hover:bg-white/20 transition-all duration-200">
@@ -231,15 +231,15 @@
                     <div class="grid grid-cols-3 gap-4">
                         <div class="text-center p-4 bg-white/10 rounded-xl backdrop-blur-md border border-white/20">
                             <div class="text-2xl font-bold text-white">500+</div>
-                            <div class="text-xs text-blue-200">Students</div>
+                            <div class="text-xs text-blue-200">Murid</div>
                         </div>
                         <div class="text-center p-4 bg-white/10 rounded-xl backdrop-blur-md border border-white/20">
-                            <div class="text-2xl font-bold text-white">98%</div>
-                            <div class="text-xs text-blue-200">Accuracy</div>
+                            <div class="text-2xl font-bold text-white">99%</div>
+                            <div class="text-xs text-blue-200">Akurasi</div>
                         </div>
                         <div class="text-center p-4 bg-white/10 rounded-xl backdrop-blur-md border border-white/20">
-                            <div class="text-2xl font-bold text-white">Fast</div>
-                            <div class="text-xs text-blue-200">Check-in</div>
+                            <div class="text-2xl font-bold text-white">Check in</div>
+                            <div class="text-xs text-blue-200">Cepat</div>
                         </div>
                     </div>
                 </div>

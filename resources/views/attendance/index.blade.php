@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'QR Attendance')
+@section('title', 'Kehadiran')
 
 @section('content')
 
@@ -10,7 +10,7 @@
         <div class="p-8">
             <div class="flex items-center justify-between">
                 <div>
-                    <h2 class="text-3xl font-bold text-white mb-2">Welcome, {{ Auth::user()->name }}! 👋</h2>
+                    <h2 class="text-3xl font-bold text-white mb-2">Selamat Datang, {{ Auth::user()->name }}! 👋</h2>
                     <p class="text-blue-200 flex items-center space-x-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -34,8 +34,8 @@
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-white">Camera</h2>
-                    <p class="text-blue-200 text-sm">Take a photo</p>
+                    <h2 class="text-lg font-bold text-white">Kamera</h2>
+                    <p class="text-blue-200 text-sm">Ambil Foto</p>
                 </div>
             </div>
         </div>
@@ -92,12 +92,12 @@
                 <div class="grid grid-cols-2 gap-3">
                     <button type="button" 
                             onclick="takePhoto()"
-                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
+                            class="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition-all duration-200">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                        Take Photo
+                        Ambil Foto
                     </button>
 
                     <button type="submit" 
@@ -105,7 +105,7 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                         </svg>
-                        Submit
+                        Kirim
                     </button>
                 </div>
             </form>
@@ -116,8 +116,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <div>
-                    <h3 class="text-sm font-semibold text-blue-900">How to Check In</h3>
-                    <p class="text-sm text-blue-700 mt-1">Point your camera at the QR code and take a photo to check in. The system will automatically process your attendance.</p>
+                    <h3 class="text-sm font-semibold text-blue-900">Cara Check In</h3>
+                    <p class="text-sm text-blue-700 mt-1">Tekan "Ambil Foto" untuk mengambil Fotomu, Lalu jangan lupa tekan "Kirim".</p>
                 </div>
             </div>
         </div>

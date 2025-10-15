@@ -11,7 +11,7 @@
     <div class="p-8">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-3xl font-bold text-white mb-2">Welcome back, {{ Auth::user()->name }}! 👋</h2>
+                <h2 class="text-3xl font-bold text-white mb-2">Selamat Datang, {{ Auth::user()->name }}! 👋</h2>
                 <p class="text-blue-200 flex items-center space-x-2">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -26,8 +26,8 @@
 <!-- Chart Card - Donut -->
 <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200 mb-8">
     <div class="mb-6">
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">Today's Attendance Overview</h3>
-        <p class="text-slate-600">Visual representation of today's attendance status</p>
+        <h3 class="text-2xl font-bold text-slate-800 mb-2">Kehadiran hari ini </h3>
+        <p class="text-slate-600">Representasi visual status kehadiran hari ini</p>
     </div>
     
     <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
@@ -99,8 +99,8 @@
 <!-- Chart Card - Bar per Kelas -->
 <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
     <div class="mb-6">
-        <h3 class="text-2xl font-bold text-slate-800 mb-2">Attendance by Class</h3>
-        <p class="text-slate-600">Breakdown of attendance status per class today</p>
+        <h3 class="text-2xl font-bold text-slate-800 mb-2">Kehadiran berdasarkan kelas</h3>
+        <p class="text-slate-600">Rincian status kehadiran per kelas hari ini</p>
     </div>
     
     <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
@@ -154,7 +154,6 @@ new Chart(ctxStatus, {
             },
             title: {
                 display: true,
-                text: 'Today\'s Attendance Distribution',
                 font: { 
                     size: 18,
                     weight: 'bold',
@@ -255,7 +254,6 @@ new Chart(document.getElementById('classChart'), {
         plugins: {
             title: {
                 display: true,
-                text: 'Attendance Breakdown by Class',
                 font: { 
                     size: 18,
                     weight: 'bold',
@@ -315,11 +313,14 @@ new Chart(document.getElementById('classChart'), {
                     borderDash: [5, 5]
                 },
                 ticks: {
-                    font: {
-                        size: 12,
-                        weight: '600'
+                    // tampilkan hanya angka bulat
+                    callback: function(value) {
+                        if (Number.isInteger(value)) {
+                            return value;
+                        }
                     },
                     color: '#475569'
+
                 }
             }
         },

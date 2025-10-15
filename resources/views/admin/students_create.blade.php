@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Siswa')
+
 @section('content')
 <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
     <h2 class="text-xl font-bold mb-4">Tambah Siswa Baru</h2>

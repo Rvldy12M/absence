@@ -1,23 +1,9 @@
 @extends('layouts.app')
 
+@section('title', 'Form Absen Siswa')
+
 @section('content')
 <div class="p-6">
-    <!-- Welcome Card -->
-    <div class="mb-8 bg-gradient-to-r from-blue-900 to-slate-800 rounded-2xl shadow-2xl overflow-hidden">
-        <div class="p-8">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-3xl font-bold text-white mb-2">Welcome, {{ Auth::user()->name }}! 👋</h2>
-                    <p class="text-blue-200 flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                        <span>{{ now()->format('l, d F Y') }}</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Main Form Card -->
     <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
@@ -122,7 +108,7 @@
                     <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
-                    Submit Attendance
+                    Kirim
                 </button>
             </form>
         </div>
@@ -134,8 +120,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>
         <div>
-            <p class="text-sm font-semibold text-blue-900">Need Help?</p>
-            <p class="text-sm text-blue-700 mt-1">Make sure to submit your attendance before the deadline. Contact your teacher if you have any issues.</p>
+            <p class="text-sm font-semibold text-blue-900">Butuh Bantuan?</p>
+            <p class="text-sm text-blue-700 mt-1">Pastikan Anda mengirimkan kehadiran Anda sebelum batas waktu. Hubungi guru Anda jika Anda mengalami masalah..</p>
         </div>
     </div>
 </div>

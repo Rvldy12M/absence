@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Kehadiran')
+
 @section('content')
 <div class="p-6">
     <h1 class="text-3xl font-bold mb-6 text-slate-800">Attendance Records</h1>
@@ -8,20 +10,18 @@
     <!-- 🔹 FILTER AREA -->
 
     <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
-        <table id="attendanceTable" class="display w-full">
-        <input type="date" id="dateFilter" class="form-control" />
+    <table id="attendanceTable" class="display w-full">
+        <input type="date" id="dateFilter" class="form-control border border-gray-300 rounded-lg px-3 py-1">
 
         <div class="flex items-center space-x-3 mb-4">
-            <label for="classFilter" class="text-sm font-medium text-gray-700">Kelas:</label>
             <select id="classFilter" class="border border-gray-300 rounded-lg px-3 py-1">
-                <option value="">Semua</option>
+                <option value="">Semua Kelasㅤㅤ</option>
                 @foreach(\App\Models\Classroom::all() as $class)
                     <option value="{{ $class->id }}">{{ $class->name }}</option>
                 @endforeach
             </select>
-        </div>
 
-        <select id="statusFilter" class="form-select">
+        <select id="statusFilter" class="form-select border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Status</option>
             <option value="hadir">Hadir</option>
             <option value="izin">Izin</option>
@@ -29,19 +29,26 @@
             <option value="telat">Telat</option>
         </select>
 
+        <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+            Export Excel
+        </button>
+
+
             <thead class="bg-slate-50">
                 <tr>
                     <th>ID</th>
-                    <th>Student</th>
+                    <th>Nama Siswa</th>
                     <th>Email</th>
-                    <th>Class</th>
-                    <th>Date</th>
-                    <th>Time</th>
+                    <th>Kelas</th>
+                    <th>Tanggal</th>
+                    <th>Waktu</th>
                     <th>Status</th>
-                    <th>Method</th>
-                    <th>Evidence</th>
+                    <th>Metode</th>
+                    <th>Keterangan</th>
                 </tr>
             </thead>
+            </div>
+
             <tbody>
                 <tr>
                     <td colspan="8">Loading...</td>
@@ -67,6 +74,7 @@ $(document).ready(function () {
                 d.date = $('#dateFilter').val();
                 d.status = $('#statusFilter').val();
                 d.class_id = $('#classFilter').val(); // 🔹 ambil nilai kelas
+                
             }
         },
         order: [[4, 'desc'], [5, 'desc']], // tanggal & jam terbaru
@@ -86,6 +94,9 @@ $(document).ready(function () {
                         return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
                     } else if (row.photo) {
                         return '<a href="/storage/' + row.photo + '" target="_blank"><img src="/storage/' + row.photo + '" width="60" height="60" style="border-radius:8px"></a>';
+                    }else if (row.method === 'Form' && row.notes) {
+                        // Kalau metode form dan ada notes
+                        return `<span class="italic text-slate-700">${row.notes}</span>`;
                     } else {
                         return '<em>No evidence</em>';
                     }
@@ -99,5 +110,16 @@ $(document).ready(function () {
         table.ajax.reload();
     });
 });
+
+$('#exportExcel').on('click', function() {
+    const date = $('#dateFilter').val();
+    const status = $('#statusFilter').val();
+    const class_id = $('#classFilter').val();
+
+    const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
+    window.location.href = url;
+});
+
 </script>
+
 @endsection
