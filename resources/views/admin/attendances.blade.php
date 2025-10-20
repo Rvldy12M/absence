@@ -39,61 +39,54 @@ table.dataTable tbody img {
 }
 </style>
 
-<div class="p-6">
-    <h1 class="text-3xl font-bold mb-6 text-slate-800">Attendance Records</h1>
-
-    
-    <!-- 🔹 FILTER AREA -->
-
-    <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
-    <table id="attendanceTable" class="display w-full">
+<div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
+    <!-- 🔹 Filter Area -->
+    <div class="flex items-center space-x-3 mb-4">
         <input type="date" id="dateFilter" class="form-control border border-gray-300 rounded-lg px-3 py-1">
+        
+        <select id="classFilter" class="border border-gray-300 rounded-lg px-3 py-1">
+            <option value="">Semua Kelas</option>
+            @foreach(\App\Models\Classroom::all() as $class)
+                <option value="{{ $class->id }}">{{ $class->name }}</option>
+            @endforeach
+        </select>
 
-        <div class="flex items-center space-x-3 mb-4">
-            <select id="classFilter" class="border border-gray-300 rounded-lg px-3 py-1">
-                <option value="">Semua Kelasㅤㅤ</option>
-                @foreach(\App\Models\Classroom::all() as $class)
-                    <option value="{{ $class->id }}">{{ $class->name }}</option>
-                @endforeach
-            </select>
-
-        <select id="statusFilter" class="form-select border border-gray-300 rounded-lg px-3 py-1">
+        <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Status</option>
             <option value="Hadir">Hadir</option>
             <option value="Telat">Telat</option>
             <option value="Izin">Izin</option>
             <option value="Sakit">Sakit</option>
-
         </select>
 
         <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
             Export Excel
         </button>
-
-
-            <thead class="bg-slate-50">
-                <tr>
-                    <th>ID</th>
-                    <th>Nama Siswa</th>
-                    <th>Email</th>
-                    <th>Kelas</th>
-                    <th>Tanggal</th>
-                    <th>Waktu</th>
-                    <th>Status</th>
-                    <th>Metode</th>
-                    <th>Keterangan</th>
-                </tr>
-            </thead>
-            </div>
-
-            <tbody>
-                <tr>
-                    <td colspan="8">Loading...</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
+
+    <!-- 🔹 Table Area -->
+    <table id="attendanceTable" class="display w-full">
+        <thead class="bg-slate-50">
+            <tr>
+                <th>ID</th>
+                <th>Nama Siswa</th>
+                <th>Email</th>
+                <th>Kelas</th>
+                <th>Tanggal</th>
+                <th>Waktu</th>
+                <th>Status</th>
+                <th>Metode</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="9" class="text-center">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+
 
 <!-- jQuery + DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
