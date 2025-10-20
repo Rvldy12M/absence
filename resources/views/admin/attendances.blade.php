@@ -51,7 +51,7 @@
 
             <tbody>
                 <tr>
-                    <td colspan="8">ABC...</td>
+                    <td colspan="8">Loading...</td>
                 </tr>
             </tbody>
         </table>
