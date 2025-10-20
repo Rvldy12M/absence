@@ -3,6 +3,42 @@
 @section('title', 'Kehadiran')
 
 @section('content')
+<style>
+/* Biar tabel lebih lega dan rapi */
+table.dataTable {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
+}
+
+table.dataTable thead th {
+    background-color: #f8fafc;
+    padding: 12px 16px !important;
+    text-align: center;
+    font-weight: 600;
+}
+
+table.dataTable tbody td {
+    background: #fff;
+    padding: 12px 16px !important;
+    border: none;
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* Efek hover biar cakep */
+table.dataTable tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Biar gambar QR/keterangan nggak dempet */
+table.dataTable tbody img {
+    max-height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+</style>
+
 <div class="p-6">
     <h1 class="text-3xl font-bold mb-6 text-slate-800">Attendance Records</h1>
 
@@ -23,10 +59,11 @@
 
         <select id="statusFilter" class="form-select border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Status</option>
-            <option value="hadir">Hadir</option>
-            <option value="izin">Izin</option>
-            <option value="sakit">Sakit</option>
-            <option value="telat">Telat</option>
+            <option value="Hadir">Hadir</option>
+            <option value="Telat">Telat</option>
+            <option value="Izin">Izin</option>
+            <option value="Sakit">Sakit</option>
+
         </select>
 
         <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">

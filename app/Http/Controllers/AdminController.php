@@ -288,36 +288,37 @@ class AdminController extends Controller
             'attendances.method',
             'attendances.photo',
             'attendances.notes',
-            
         ])
-        ->join('users', 'users.id', '=', 'attendances.user_id')
-        ->leftJoin('classrooms', 'users.class_id', '=', 'classrooms.id');
-    
-        // 🔹 Filter by date
-        if ($request->has('date') && !empty($request->date)) {
+        ->join('users', 'attendances.user_id', '=', 'users.id')
+        ->join('classrooms', 'users.class_id', '=', 'classrooms.id');
+
+        // Filter tanggal
+        if ($request->filled('date')) {
             $query->whereDate('attendances.date', $request->date);
         }
-    
-        // 🔹 Filter by status (Hadir, Sakit, Izin, Telat)
-        if ($request->has('status') && !empty($request->status)) {
+
+        // Filter status
+        if ($request->filled('status')) {
             $query->where('attendances.status', $request->status);
         }
-    
-        // 🔹 Filter by class (kelas_id)
-        if ($request->has('class_id') && !empty($request->class_id)) {
+
+        // Filter kelas
+        if ($request->filled('class_id')) {
             $query->where('users.class_id', $request->class_id);
         }
-    
-        // 🔹 Urutkan berdasarkan tanggal & jam terbaru
-        $query->orderByDesc('attendances.date')
-              ->orderByDesc('attendances.time');
-              
-    
-        $dt = new Datatables(new LaravelAdapter);
-        $dt->query($query);
 
+
+        // Urutkan berdasarkan tanggal dan waktu terbaru
+        $query->orderByDesc('attendances.date')
+            ->orderByDesc('attendances.time');
+
+        // Ozdemir DataTables
+        $dt = new \Ozdemir\Datatables\Datatables(new \Ozdemir\Datatables\DB\LaravelAdapter);
+        $dt->query($query->toSql(), $query->getBindings());
+        
         return $dt->generate();
     }
+
 
     public function exportAttendances(Request $request)
     {
