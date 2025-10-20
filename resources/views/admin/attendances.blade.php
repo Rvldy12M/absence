@@ -51,7 +51,7 @@
 
             <tbody>
                 <tr>
-                    <td colspan="8">Loading...</td>
+                    <td colspan="8">ABC...</td>
                 </tr>
             </tbody>
         </table>
@@ -64,6 +64,12 @@
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
 <script>
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
 $(document).ready(function () {
     let table = $('#attendanceTable').DataTable({
         serverSide: true,
