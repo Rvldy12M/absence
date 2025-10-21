@@ -136,7 +136,7 @@ $(document).ready(function () {
                     } else if (foto) {
                         return `
                             <a href="/storage/${foto}" target="_blank">
-                                <img src="{{ asset('storage/' . $attendance->photo) }}" width="60" height="60" style="border-radius:8px">
+                                <img src="{{ asset('storage/' . $attendances->photo) }}" width="60" height="60" style="border-radius:8px">
                             </a>`;
                     } else if (metode === 'Form' && ketTambahan) {
                         return `<span class="italic text-slate-700">${ketTambahan}</span>`;
