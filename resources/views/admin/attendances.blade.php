@@ -4,51 +4,53 @@
 
 @section('content')
 <style>
-/* 🔹 Tabel styling */
-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
+/* Biar tabel lebih lega dan rapi */
+table.dataTable {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 8px !important;
 }
-thead th {
+
+table.dataTable thead th {
     background-color: #f8fafc;
-    padding: 12px 16px;
+    padding: 12px 16px !important;
     text-align: center;
     font-weight: 600;
-    border-bottom: 2px solid #e2e8f0;
 }
-tbody td {
+
+table.dataTable tbody td {
     background: #fff;
-    padding: 12px 16px;
+    padding: 12px 16px !important;
     border: none;
-    text-align: center;
     vertical-align: middle;
+    text-align: center;
 }
-tbody tr:hover {
+
+/* Efek hover biar cakep */
+table.dataTable tbody tr:hover {
     background-color: #f1f5f9;
 }
-button {
-    transition: all 0.2s ease;
-}
-button:hover {
-    transform: scale(1.03);
-}
-img {
+
+/* Biar gambar QR/keterangan nggak dempet */
+table.dataTable tbody img {
     max-height: 60px;
-    border-radius: 8px;
+    border-radius: 6px;
+    object-fit: cover;
 }
 </style>
 
 <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
-    <!-- 🔹 Filter -->
-    <div class="flex items-center space-x-3 mb-5">
-        <input type="date" id="dateFilter" class="border border-gray-300 rounded-lg px-3 py-1">
+    <!-- 🔹 Filter Area -->
+    <div class="flex items-center space-x-3 mb-4">
+        <input type="date" id="dateFilter" class="form-control border border-gray-300 rounded-lg px-3 py-1">
+        
         <select id="classFilter" class="border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Kelas</option>
             @foreach(\App\Models\Classroom::all() as $class)
                 <option value="{{ $class->id }}">{{ $class->name }}</option>
             @endforeach
         </select>
+
         <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Status</option>
             <option value="Hadir">Hadir</option>
@@ -57,129 +59,102 @@ img {
             <option value="Sakit">Sakit</option>
         </select>
 
-        <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+        <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
             Export Excel
         </button>
     </div>
 
-    <!-- 🔹 Table -->
-    <div id="tableArea">
-        <div class="text-center text-gray-500 py-4">Loading data...</div>
-    </div>
+    <!-- 🔹 Table Area -->
+    <table id="attendanceTable" class="display w-full">
+        <thead class="bg-slate-50">
+            <tr>
+                <th>ID</th>
+                <th>Nama Siswa</th>
+                <th>Email</th>
+                <th>Kelas</th>
+                <th>Tanggal</th>
+                <th>Waktu</th>
+                <th>Status</th>
+                <th>Metode</th>
+                <th>Keterangan</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="9" class="text-center">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<!-- jQuery -->
+
+<!-- jQuery + DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+
 <script>
-$.ajaxSetup({
-    headers: {
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+$(document).ready(function () {
+    let table = $('#attendanceTable').DataTable({
+        serverSide: true,
+        processing: true,
+        ajax: {
+            url: "{{ route('admin.attendances.data') }}",
+            data: function (d) {
+                d.date = $('#dateFilter').val();
+                d.status = $('#statusFilter').val();
+                d.class_id = $('#classFilter').val(); // 🔹 ambil nilai kelas
+                
+            }
+        },
+        order: [[4, 'desc'], [5, 'desc']], // tanggal & jam terbaru
+columns: [
+    { data: 0, title: "ID" },
+    { data: 1, title: "Nama Siswa" },
+    { data: 3, title: "Email" },
+    { data: 2, title: "Kelas" },
+    { data: 4, title: "Tanggal" },
+    { data: 5, title: "Waktu" },
+    { data: 6, title: "Status" },
+    { data: 7, title: "Metode" },
+    {
+        data: 8,
+        render: function (data, type, row) {
+            if (row[7] === 'qr') {
+                return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
+            } else if (row[8]) {
+                return '<a href="/storage/' + row[8] + '" target="_blank"><img src="/storage/' + row[8] + '" width="60" height="60" style="border-radius:8px"></a>';
+            } else if (row[7] === 'Form' && row[9]) {
+                return `<span class="italic text-slate-700">${row[9]}</span>`;
+            } else {
+                return '<em>No evidence</em>';
+            }
+        }
     }
+]
+    });
+
+    // 🔹 Filter otomatis saat dropdown berubah
+    $('#dateFilter, #statusFilter, #classFilter').on('change', function() {
+        table.ajax.reload();
+    });
 });
 
-function loadAttendances() {
+$('#exportExcel').on('click', function() {
     const date = $('#dateFilter').val();
     const status = $('#statusFilter').val();
     const class_id = $('#classFilter').val();
 
-    $('#tableArea').html('<div class="text-center text-gray-500 py-4">Loading data...</div>');
-
-    $.ajax({
-        url: "{{ route('admin.attendances.data') }}",
-        type: 'GET',
-        data: { date, status, class_id },
-        success: function(res) {
-            if (!res.data || res.data.length === 0) {
-                $('#tableArea').html('<div class="text-center text-gray-500 py-4">Belum ada data absensi.</div>');
-                return;
-            }
-
-            let rows = '';
-            res.data.forEach(function(row) {
-                const id = row[0] ?? '-';
-                const nama = row[1] ?? '-';
-                const kelas = row[2] ?? '-';
-                const email = row[3] ?? '-';
-                const tanggal = row[4] ?? '-';
-                const waktu = row[5] ?? '-';
-                const status = row[6] ?? '-';
-                const metode = row[7] ?? '-';
-                const evidence = row[8] ?? '';
-                const keterangan = row[9] ?? '';
-
-                let evidenceHTML = '<em>No evidence</em>';
-                if (metode === 'qr') {
-                    evidenceHTML = '<span style="color:purple;font-weight:bold;">QR Verified</span>';
-                } else if (evidence) {
-                    evidenceHTML = `<a href="/storage/${evidence}" target="_blank"><img src="/storage/${evidence}"></a>`;
-                } else if (keterangan) {
-                    evidenceHTML = `<span class="italic text-slate-700">${keterangan}</span>`;
-                }
-
-                let statusColor = '';
-                if (status === 'Hadir') statusColor = 'text-green-600 font-semibold';
-                else if (status === 'Telat') statusColor = 'text-yellow-600 font-semibold';
-                else if (status === 'Izin') statusColor = 'text-blue-600 font-semibold';
-                else if (status === 'Sakit') statusColor = 'text-purple-600 font-semibold';
-                else statusColor = 'text-red-600 font-semibold';
-
-                rows += `
-                    <tr class="hover:bg-slate-50">
-                        <td>${id}</td>
-                        <td>${nama}</td>
-                        <td>${kelas}</td>
-                        <td>${tanggal}</td>
-                        <td>${waktu}</td>
-                        <td class="${statusColor}">${status}</td>
-                        <td>${metode}</td>
-                        <td>${evidenceHTML}</td>
-                    </tr>
-                `;
-            });
-
-            const tableHTML = `
-                <table class="w-full text-sm">
-                    <thead class="bg-slate-50">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama Siswa</th>
-                            <th>Kelas</th>
-                            <th>Tanggal</th>
-                            <th>Waktu</th>
-                            <th>Status</th>
-                            <th>Metode</th>
-                            <th>Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>${rows}</tbody>
-                </table>
-            `;
-            $('#tableArea').html(tableHTML);
-        },
-        error: function(err) {
-            console.error(err);
-            $('#tableArea').html('<div class="text-center text-red-500 py-4">Gagal memuat data.</div>');
-        }
-    });
-}
-
-// 🔹 Load data awal
-$(document).ready(function() {
-    loadAttendances();
-
-    // 🔹 Filter realtime
-    $('#dateFilter, #statusFilter, #classFilter').on('change input', function() {
-        loadAttendances();
-    });
-
-    // 🔹 Export Excel
-    $('#exportExcel').on('click', function() {
-        const date = $('#dateFilter').val();
-        const status = $('#statusFilter').val();
-        const class_id = $('#classFilter').val();
-        const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
-        window.location.href = url;
-    });
+    const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
+    window.location.href = url;
 });
+
 </script>
+
 @endsection
