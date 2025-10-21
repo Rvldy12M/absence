@@ -4,7 +4,7 @@
 
 @section('content')
 <style>
-/* Biar tabel lebih lega dan rapi */
+/* Styling tabel biar lebih rapi */
 table.dataTable {
     width: 100% !important;
     border-collapse: separate !important;
@@ -26,12 +26,10 @@ table.dataTable tbody td {
     text-align: center;
 }
 
-/* Efek hover biar cakep */
 table.dataTable tbody tr:hover {
     background-color: #f1f5f9;
 }
 
-/* Biar gambar QR/keterangan nggak dempet */
 table.dataTable tbody img {
     max-height: 60px;
     border-radius: 6px;
@@ -81,12 +79,11 @@ table.dataTable tbody img {
         </thead>
         <tbody>
             <tr>
-                <td colspan="9" class="text-center">Loading...</td>
+                <td colspan="9" class="text-center">Memuat data...</td>
             </tr>
         </tbody>
     </table>
 </div>
-
 
 <!-- jQuery + DataTables -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -94,67 +91,76 @@ table.dataTable tbody img {
 <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
 <script>
-        $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
+// ✅ Setup CSRF Token biar aman di hosting
+$.ajaxSetup({
+    headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') }
+});
 
 $(document).ready(function () {
-    let table = $('#attendanceTable').DataTable({
-        serverSide: true,
+    // ✅ Inisialisasi DataTables
+    const table = $('#attendanceTable').DataTable({
         processing: true,
+        serverSide: true,
         ajax: {
             url: "{{ route('admin.attendances.data') }}",
+            type: "GET",
             data: function (d) {
                 d.date = $('#dateFilter').val();
+                d.class_id = $('#classFilter').val();
                 d.status = $('#statusFilter').val();
-                d.class_id = $('#classFilter').val(); // 🔹 ambil nilai kelas
-                
+            },
+            error: function(xhr) {
+                console.error("⚠️ Gagal memuat data:", xhr.responseText);
             }
         },
-        order: [[4, 'desc'], [5, 'desc']], // tanggal & jam terbaru
-columns: [
-    { data: 0, title: "ID" },
-    { data: 1, title: "Nama Siswa" },
-    { data: 3, title: "Email" },
-    { data: 2, title: "Kelas" },
-    { data: 4, title: "Tanggal" },
-    { data: 5, title: "Waktu" },
-    { data: 6, title: "Status" },
-    { data: 7, title: "Metode" },
-    {
-        data: 8,
-        render: function (data, type, row) {
-            if (row[7] === 'qr') {
-                return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
-            } else if (row[8]) {
-                return '<a href="/storage/' + row[8] + '" target="_blank"><img src="/storage/' + row[8] + '" width="60" height="60" style="border-radius:8px"></a>';
-            } else if (row[7] === 'Form' && row[9]) {
-                return `<span class="italic text-slate-700">${row[9]}</span>`;
-            } else {
-                return '<em>No evidence</em>';
+        order: [[4, 'desc'], [5, 'desc']],
+        columns: [
+            { data: 0, title: "ID" },
+            { data: 1, title: "Nama Siswa" },
+            { data: 3, title: "Email" },
+            { data: 2, title: "Kelas" },
+            { data: 4, title: "Tanggal" },
+            { data: 5, title: "Waktu" },
+            { data: 6, title: "Status" },
+            { data: 7, title: "Metode" },
+            {
+                data: 8,
+                render: function (data, type, row) {
+                    // ✅ Kondisi evidence tampil
+                    const metode = row[7];
+                    const foto = row[8];
+                    const ketTambahan = row[9];
+
+                    if (metode === 'qr') {
+                        return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
+                    } else if (foto) {
+                        return `
+                            <a href="/storage/${foto}" target="_blank">
+                                <img src="/storage/${foto}" width="60" height="60" style="border-radius:8px">
+                            </a>`;
+                    } else if (metode === 'Form' && ketTambahan) {
+                        return `<span class="italic text-slate-700">${ketTambahan}</span>`;
+                    } else {
+                        return '<em>No evidence</em>';
+                    }
+                }
             }
-        }
-    }
-]
+        ]
     });
 
-    // 🔹 Filter otomatis saat dropdown berubah
-    $('#dateFilter, #statusFilter, #classFilter').on('change', function() {
+    // ✅ Filter realtime (otomatis reload saat user ubah filter)
+    $('#dateFilter, #statusFilter, #classFilter').on('change keyup', function () {
         table.ajax.reload();
     });
+
+    // ✅ Export Excel sesuai filter aktif
+    $('#exportExcel').on('click', function() {
+        const date = $('#dateFilter').val();
+        const status = $('#statusFilter').val();
+        const class_id = $('#classFilter').val();
+        const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
+        window.location.href = url;
+    });
 });
-
-$('#exportExcel').on('click', function() {
-    const date = $('#dateFilter').val();
-    const status = $('#statusFilter').val();
-    const class_id = $('#classFilter').val();
-
-    const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
-    window.location.href = url;
-});
-
 </script>
-
 @endsection
