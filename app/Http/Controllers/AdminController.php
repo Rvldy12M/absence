@@ -379,7 +379,7 @@ class AdminController extends Controller
             $classId = $request->get('class_id');
     
             $query = Attendance::select([
-                'attendances.id',
+                'users.id',
                 'users.name as student_name',
                 'users.email',
                 'attendances.date',
