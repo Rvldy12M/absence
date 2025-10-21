@@ -114,31 +114,30 @@ $(document).ready(function () {
             }
         },
         order: [[4, 'desc'], [5, 'desc']], // tanggal & jam terbaru
-        columns: [
-            { data: "id" },
-            { data: "student_name" },
-            { data: "email" },
-            { data: "class_name", title: "Class" },
-            { data: "date" },
-            { data: "time" },
-            { data: "status" },
-            { data: "method" },
-            { 
-                data: "photo",
-                render: function (data, type, row) {
-                    if (row.method === 'qr') {
-                        return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
-                    } else if (row.photo) {
-                        return '<a href="/storage/' + row.photo + '" target="_blank"><img src="/storage/' + row.photo + '" width="60" height="60" style="border-radius:8px"></a>';
-                    }else if (row.method === 'Form' && row.notes) {
-                        // Kalau metode form dan ada notes
-                        return `<span class="italic text-slate-700">${row.notes}</span>`;
-                    } else {
-                        return '<em>No evidence</em>';
-                    }
-                }
+columns: [
+    { data: 0, title: "ID" },
+    { data: 1, title: "Nama Siswa" },
+    { data: 3, title: "Email" },
+    { data: 2, title: "Kelas" },
+    { data: 4, title: "Tanggal" },
+    { data: 5, title: "Waktu" },
+    { data: 6, title: "Status" },
+    { data: 7, title: "Metode" },
+    {
+        data: 8,
+        render: function (data, type, row) {
+            if (row[7] === 'qr') {
+                return '<span style="color:purple;font-weight:bold;">QR Verified</span>';
+            } else if (row[8]) {
+                return '<a href="/storage/' + row[8] + '" target="_blank"><img src="/storage/' + row[8] + '" width="60" height="60" style="border-radius:8px"></a>';
+            } else if (row[7] === 'Form' && row[9]) {
+                return `<span class="italic text-slate-700">${row[9]}</span>`;
+            } else {
+                return '<em>No evidence</em>';
             }
-        ]
+        }
+    }
+]
     });
 
     // 🔹 Filter otomatis saat dropdown berubah

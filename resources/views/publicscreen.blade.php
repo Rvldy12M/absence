@@ -42,6 +42,61 @@
             </div>
         </div>
 
+        <!-- ROW 3: Table (Latest Attendances) -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-4">
+            <h3 class="text-lg font-bold text-slate-800 mb-3">Absensi Terbaru</h3>
+            <table class="w-full border-collapse text-sm">
+                <thead class="bg-slate-100">
+                    <tr>
+                        <th class="py-2 px-3 text-left">Nama Siswa</th>
+                        <th class="py-2 px-3 text-left">Kelas</th>
+                        <th class="py-2 px-3 text-left">Tanggal</th>
+                        <th class="py-2 px-3 text-left">Waktu</th>
+                        <th class="py-2 px-3 text-left">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        use App\Models\Attendance;
+                        use App\Models\User;
+                        use Illuminate\Support\Facades\DB;
+
+                        $latestAttendances = Attendance::select(
+                            'attendances.*',
+                            'users.name as student_name',
+                            'classrooms.name as class_name'
+                        )
+                        ->join('users', 'users.id', '=', 'attendances.user_id')
+                        ->join('classrooms', 'users.class_id', '=', 'classrooms.id')
+                        ->orderByDesc('attendances.date')
+                        ->orderByDesc('attendances.time')
+                        ->limit(10)
+                        ->get();
+                    @endphp
+
+                    @forelse ($latestAttendances as $att)
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="py-2 px-3">{{ $att->student_name }}</td>
+                            <td class="py-2 px-3">{{ $att->class_name }}</td>
+                            <td class="py-2 px-3">{{ $att->date }}</td>
+                            <td class="py-2 px-3">{{ $att->time }}</td>
+                            <td class="py-2 px-3 font-semibold 
+                                @if($att->status == 'Hadir') text-green-600 
+                                @elseif($att->status == 'Telat') text-yellow-600 
+                                @elseif($att->status == 'Izin') text-blue-600 
+                                @elseif($att->status == 'Sakit') text-purple-600 
+                                @else text-red-600 @endif">
+                                {{ $att->status }}
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-slate-500 py-3">Belum ada data absensi.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 
@@ -50,6 +105,10 @@
     html, body {
         overflow: hidden;
         height: 100%;
+    }
+
+    table th, table td {
+        font-size: 14px;
     }
 </style>
 
@@ -111,11 +170,8 @@ new Chart(document.getElementById('classChart'), {
                 stacked: true,
                 beginAtZero: true,
                 ticks: {
-                    // tampilkan hanya angka bulat
                     callback: function(value) {
-                        if (Number.isInteger(value)) {
-                            return value;
-                        }
+                        if (Number.isInteger(value)) return value;
                     },
                     stepSize: 1
                 }
