@@ -158,7 +158,7 @@ $(document).ready(function () {
         const date = $('#dateFilter').val();
         const status = $('#statusFilter').val();
         const class_id = $('#classFilter').val();
-        const url = `'/attendances/export'?date=${date}&status=${status}&class_id=${class_id}`;
+        const url = '/attendances/export';
         window.location.href = url;
     });
 });
