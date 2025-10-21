@@ -51,7 +51,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Attendance DataTables
     Route::get('/admin/attendances', [AdminController::class, 'attendances'])->name('admin.attendances');
-    Route::get('/admin/attendances/data', [AdminController::class, 'attendancesData'])->name('admin.attendances.data');
+    Route::get('/admin/attendances/data', [AdminController::class, 'attendancesData'])
+    ->name('admin.attendances.data');
 
     // Student DataTables
     Route::get('/admin/students', [AdminController::class, 'students'])->name('admin.students');
