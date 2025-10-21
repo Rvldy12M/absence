@@ -37,7 +37,7 @@ $(document).ready(function () {
     $('#studentsTable').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.students.data') }}",
+        ajax: "/admin/students/data",
         columns: [
             { data: 'id', name: 'id' },
             { data: 'name', name: 'name' },

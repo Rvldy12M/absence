@@ -102,7 +102,7 @@ $(document).ready(function () {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{ route('admin.attendances.data') }}",
+            url: "/admin/attendances/data",
             type: "GET",
             data: function (d) {
                 d.date = $('#dateFilter').val();
