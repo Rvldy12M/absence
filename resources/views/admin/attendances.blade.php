@@ -4,72 +4,115 @@
 
 @section('content')
 <style>
-/* Styling tabel biar rapi */
-table.dataTable {
-    width: 100% !important;
-    border-collapse: separate !important;
-    border-spacing: 0 8px !important;
+/* 🔹 Styling tabel biar lega dan rapi */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
 }
 
-table.dataTable thead th {
+thead th {
     background-color: #f8fafc;
-    padding: 12px 16px !important;
+    padding: 12px 16px;
     text-align: center;
     font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
 }
 
-table.dataTable tbody td {
+tbody td {
     background: #fff;
-    padding: 12px 16px !important;
+    padding: 12px 16px;
     border: none;
     vertical-align: middle;
     text-align: center;
 }
 
-table.dataTable tbody tr:hover {
+tbody tr:hover {
     background-color: #f1f5f9;
 }
 
-table.dataTable tbody img {
-    max-height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
+/* 🔹 Gaya tombol export */
+button {
+    transition: all 0.2s ease;
+}
+button:hover {
+    transform: scale(1.03);
 }
 </style>
 
+@php
+use App\Models\Attendance;
+use App\Models\Classroom;
+use Illuminate\Http\Request;
+
+// Ambil filter dari request (jika ada)
+$date = request('date');
+$status = request('status');
+$class_id = request('class_id');
+
+// Query utama
+$query = Attendance::select(
+    'attendances.*',
+    'users.name as student_name',
+    'classrooms.name as class_name'
+)
+->join('users', 'users.id', '=', 'attendances.user_id')
+->join('classrooms', 'users.class_id', '=', 'classrooms.id')
+->orderByDesc('attendances.date')
+->orderByDesc('attendances.time');
+
+// Filter opsional
+if ($date) {
+    $query->whereDate('attendances.date', $date);
+}
+if ($status) {
+    $query->where('attendances.status', $status);
+}
+if ($class_id) {
+    $query->where('classrooms.id', $class_id);
+}
+
+// Ambil hasil
+$attendances = $query->get();
+@endphp
+
 <div class="bg-white p-6 rounded-2xl shadow-lg border border-slate-200">
-    <!-- Filter -->
-    <div class="flex items-center space-x-3 mb-4">
-        <input type="date" id="dateFilter" class="border border-gray-300 rounded-lg px-3 py-1">
-        
-        <select id="classFilter" class="border border-gray-300 rounded-lg px-3 py-1">
+    <!-- 🔹 Filter -->
+    <form method="GET" action="{{ route('admin.attendances') }}" class="flex items-center space-x-3 mb-5">
+        <input type="date" name="date" value="{{ request('date') }}" class="border border-gray-300 rounded-lg px-3 py-1">
+
+        <select name="class_id" class="border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Kelas</option>
-            @foreach(\App\Models\Classroom::all() as $class)
-                <option value="{{ $class->id }}">{{ $class->name }}</option>
+            @foreach(Classroom::all() as $class)
+                <option value="{{ $class->id }}" {{ request('class_id') == $class->id ? 'selected' : '' }}>
+                    {{ $class->name }}
+                </option>
             @endforeach
         </select>
 
-        <select id="statusFilter" class="border border-gray-300 rounded-lg px-3 py-1">
+        <select name="status" class="border border-gray-300 rounded-lg px-3 py-1">
             <option value="">Semua Status</option>
-            <option value="Hadir">Hadir</option>
-            <option value="Telat">Telat</option>
-            <option value="Izin">Izin</option>
-            <option value="Sakit">Sakit</option>
+            <option value="Hadir" {{ request('status') == 'Hadir' ? 'selected' : '' }}>Hadir</option>
+            <option value="Telat" {{ request('status') == 'Telat' ? 'selected' : '' }}>Telat</option>
+            <option value="Izin" {{ request('status') == 'Izin' ? 'selected' : '' }}>Izin</option>
+            <option value="Sakit" {{ request('status') == 'Sakit' ? 'selected' : '' }}>Sakit</option>
         </select>
 
-        <button id="exportExcel" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
-            Export Excel
-        </button>
-    </div>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Filter</button>
 
-    <!-- Tabel -->
-    <table id="attendanceTable" class="display w-full">
-        <thead>
+        <a href="{{ route('admin.attendances.export', request()->query()) }}" 
+           class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+            Export Excel
+        </a>
+    </form>
+
+    <!-- 🔹 Tabel Kehadiran -->
+    <table class="w-full text-sm">
+        <thead class="bg-slate-50">
             <tr>
                 <th>ID</th>
                 <th>Nama Siswa</th>
                 <th>Kelas</th>
-                <th>Email</th>
                 <th>Tanggal</th>
                 <th>Waktu</th>
                 <th>Status</th>
@@ -77,85 +120,43 @@ table.dataTable tbody img {
                 <th>Keterangan</th>
             </tr>
         </thead>
-        <tbody></tbody>
+        <tbody>
+            @forelse ($attendances as $att)
+                <tr class="hover:bg-slate-50">
+                    <td>{{ $att->id }}</td>
+                    <td>{{ $att->student_name }}</td>
+                    <td>{{ $att->class_name }}</td>
+                    <td>{{ $att->date }}</td>
+                    <td>{{ $att->time }}</td>
+                    <td class="font-semibold 
+                        @if($att->status == 'Hadir') text-green-600
+                        @elseif($att->status == 'Telat') text-yellow-600
+                        @elseif($att->status == 'Izin') text-blue-600
+                        @elseif($att->status == 'Sakit') text-purple-600
+                        @else text-red-600 @endif">
+                        {{ $att->status }}
+                    </td>
+                    <td>{{ $att->method ?? '-' }}</td>
+                    <td>
+                        @if ($att->method === 'qr')
+                            <span style="color:purple;font-weight:bold;">QR Verified</span>
+                        @elseif ($att->evidence)
+                            <a href="/storage/{{ $att->evidence }}" target="_blank">
+                                <img src="/storage/{{ $att->evidence }}" width="60" height="60" class="rounded-md">
+                            </a>
+                        @elseif ($att->description)
+                            <span class="italic text-slate-700">{{ $att->description }}</span>
+                        @else
+                            <em>No evidence</em>
+                        @endif
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="8" class="text-center text-slate-500 py-3">Belum ada data absensi.</td>
+                </tr>
+            @endforelse
+        </tbody>
     </table>
 </div>
-
-<!-- jQuery + DataTables -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-
-<script>
-$(document).ready(function() {
-
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-
-    // 🔹 Inisialisasi DataTables
-    let table = $('#attendanceTable').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-                url: "{{ route('admin.attendances.data') }}",
-                type: "GET",
-                data: function (d) {
-                    d.date = $('#dateFilter').val();
-                    d.status = $('#statusFilter').val();
-                    d.class_id = $('#classFilter').val();
-                }
-            },
-
-            error: function(xhr) {
-                console.error("AJAX Error:", xhr.responseText);
-            }
-        },
-        order: [[4, 'desc'], [5, 'desc']],
-        columns: [
-            { data: 0, name: 'id' },
-            { data: 1, name: 'name' },
-            { data: 2, name: 'class' },
-            { data: 3, name: 'email' },
-            { data: 4, name: 'date' },
-            { data: 5, name: 'time' },
-            { data: 6, name: 'status' },
-            { data: 7, name: 'method' },
-            {
-                data: 8,
-                render: function (data, type, row) {
-                    if (row[7] === 'qr') {
-                        return '<span class="text-purple-700 font-semibold">QR Verified</span>';
-                    } else if (data && data.includes('.jpg') || data.includes('.png')) {
-                        return `<a href="/storage/${data}" target="_blank">
-                                    <img src="/storage/${data}" width="60" height="60" style="border-radius:8px">
-                                </a>`;
-                    } else if (data) {
-                        return `<em>${data}</em>`;
-                    } else {
-                        return '<em>-</em>';
-                    }
-                }
-            }
-        ]
-    });
-
-    // 🔹 Filter otomatis
-    $('#dateFilter, #statusFilter, #classFilter').on('change', function() {
-        table.ajax.reload();
-    });
-
-    // 🔹 Export ke Excel
-    $('#exportExcel').on('click', function() {
-        const date = $('#dateFilter').val();
-        const status = $('#statusFilter').val();
-        const class_id = $('#classFilter').val();
-
-        const url = `{{ route('admin.attendances.export') }}?date=${date}&status=${status}&class_id=${class_id}`;
-        window.location.href = url;
-    });
-});
-</script>
 @endsection
