@@ -83,16 +83,16 @@
                 <input type="hidden" name="qr_code" id="qr_code" value="{{ $qr_code }}">
 
                 <!-- Camera Video Feed -->
-                <div class="space-y-3">
-                    <label class="block text-sm font-bold text-slate-700 uppercase tracking-wide">Camera Feed</label>
-                    <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-lg border-2 border-slate-300">
-                        <video id="camera" autoplay playsinline class="w-full aspect-video object-cover"></video>
-                        <canvas id="canvas" style="display:none;"></canvas>
-                        <div class="absolute inset-0 pointer-events-none">
-                            <div class="absolute top-4 right-4 flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm px-3 py-1 rounded-full border border-green-400">
-                                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                <span class="text-xs text-green-200 font-semibold">Live</span>
-                            </div>
+                <div class="relative bg-slate-900 rounded-lg overflow-hidden shadow-lg border-2 border-slate-300">
+                    <video id="camera" autoplay playsinline 
+                        class="w-full aspect-video object-cover md:h-auto h-[280px] sm:h-[320px] rounded-lg"
+                        style="transform: scaleX(-1);">
+                    </video>
+                    <canvas id="canvas" style="display:none;"></canvas>
+                    <div class="absolute inset-0 pointer-events-none">
+                        <div class="absolute top-4 right-4 flex items-center space-x-2 bg-green-500/20 backdrop-blur-sm px-3 py-1 rounded-full border border-green-400">
+                            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span class="text-xs text-green-200 font-semibold">Live</span>
                         </div>
                     </div>
                 </div>
