@@ -43,16 +43,17 @@
         </div>
 
         <!-- ROW 3: Table (Latest Attendances) -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-4">
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 mt-4 overflow-x-auto">
             <h3 class="text-lg font-bold text-slate-800 mb-3">Absensi Terbaru</h3>
-            <table class="w-full border-collapse text-sm">
+
+            <table class="min-w-full border-collapse text-sm">
                 <thead class="bg-slate-100">
                     <tr>
-                        <th class="py-2 px-3 text-left">Nama Siswa</th>
-                        <th class="py-2 px-3 text-left">Kelas</th>
-                        <th class="py-2 px-3 text-left">Tanggal</th>
-                        <th class="py-2 px-3 text-left">Waktu</th>
-                        <th class="py-2 px-3 text-left">Status</th>
+                        <th class="py-2 px-3 text-left whitespace-nowrap">Nama Siswa</th>
+                        <th class="py-2 px-3 text-left whitespace-nowrap">Kelas</th>
+                        <th class="py-2 px-3 text-left whitespace-nowrap">Tanggal</th>
+                        <th class="py-2 px-3 text-left whitespace-nowrap">Waktu</th>
+                        <th class="py-2 px-3 text-left whitespace-nowrap">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,6 +88,7 @@
                                 @elseif($att->status == 'Sakit') text-purple-600 
                                 @else text-red-600 @endif">
                                 {{ $att->status }}
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -97,20 +99,10 @@
             </table>
         </div>
 
+
     </div>
 </div>
 
-<!-- Disable scroll globally -->
-<style>
-    html, body {
-        overflow: hidden;
-        height: 100%;
-    }
-
-    table th, table td {
-        font-size: 14px;
-    }
-</style>
 
 <!-- Chart.js -->
 <script>
