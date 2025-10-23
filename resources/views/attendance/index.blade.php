@@ -42,6 +42,18 @@
 
         <!-- Content Section -->
         <div class="p-8">
+            <!-- Success Message -->
+            @if(session('success'))
+                <div class="mb-6 bg-green-50 border-l-4 border-green-500 rounded-r-lg p-4 flex items-start space-x-3">
+                    <svg class="w-6 h-6 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <p class="text-green-700 font-semibold">{{ session('success') }}</p>
+                    </div>
+                </div>
+            @endif
+
             <!-- Error Messages -->
             @if ($errors->any())
                 <div class="mb-6 bg-red-50 border-l-4 border-red-500 rounded-r-lg p-4 flex items-start space-x-3">

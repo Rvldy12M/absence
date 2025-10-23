@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Register</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
@@ -64,6 +64,35 @@
                             >
                         </div>
                     </div>
+
+                    <!-- Dropdown Kelas-->
+                    <div class="space-y-2">
+                        <label class="block text-sm font-semibold text-slate-700">Kelas</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18m-7 5h7"/>
+                                </svg>
+                            </div>
+                            <select 
+                                name="class_id" 
+                                id="class_id" 
+                                class="w-full pl-10 pr-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-900 focus:ring-4 focus:ring-blue-900/10 outline-none transition-all duration-200 text-slate-700 bg-white appearance-none"
+                                required
+                            >
+                                <option value="" disabled selected>Pilih Kelas</option>
+                                @foreach(\App\Models\Classroom::all() as $class)
+                                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                                @endforeach
+                            </select>
+                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- Password Input -->
                     <div class="space-y-2">

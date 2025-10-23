@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Classroom;
+
 
 class RegisterController extends Controller
 {
@@ -20,12 +22,14 @@ class RegisterController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
+            'class_id' => 'required|exists:classrooms,id',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'class_id' => $request->class_id,
             'password' => Hash::make($data['password']),
             'role' => 'student', // default student
         ]);
